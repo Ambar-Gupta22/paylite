@@ -1,25 +1,33 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+enum CollectStatus { pending, paid, declined }
 
-part 'collect_request.freezed.dart';
-part 'collect_request.g.dart';
+class CollectRequest {
+  final String id;
+  final String requesterVpa;
+  final int amountPaise;
+  final String? note;
+  final CollectStatus status;
+  final DateTime createdAt;
 
-enum CollectStatus {
-  @JsonValue('PENDING') pending,
-  @JsonValue('PAID') paid,
-  @JsonValue('DECLINED') declined,
-  @JsonValue('EXPIRED') expired,
-}
+  const CollectRequest({
+    required this.id,
+    required this.requesterVpa,
+    required this.amountPaise,
+    this.note,
+    required this.status,
+    required this.createdAt,
+  });
 
-@freezed
-class CollectRequest with _$CollectRequest {
-  const factory CollectRequest({
-    required String id,
-    required String from,
-    required String to,
-    required int amountPaise,
-    required CollectStatus status,
-    required DateTime expiresAt,
-  }) = _CollectRequest;
-
-  factory CollectRequest.fromJson(Map<String, dynamic> json) => _$CollectRequestFromJson(json);
+  factory CollectRequest.fromJson(Map<String, dynamic> json) {
+    return CollectRequest(
+      id: json['id'] as String,
+      requesterVpa: json['requesterVpa'] as String? ?? json['from'] as String? ?? 'unknown',
+      amountPaise: json['amountPaise'] as int,
+      note: json['note'] as String?,
+      status: CollectStatus.values.firstWhere(
+        (e) => e.name == json['status'],
+        orElse: () => CollectStatus.pending,
+      ),
+      createdAt: DateTime.parse(json['createdAt'] as String),
+    );
+  }
 }

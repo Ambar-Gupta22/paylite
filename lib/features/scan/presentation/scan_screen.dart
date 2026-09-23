@@ -126,17 +126,7 @@ class _ScanScreenState extends State<ScanScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: ValueListenableBuilder(
-                    valueListenable: _controller.torchState,
-                    builder: (context, state, child) {
-                      switch (state) {
-                        case TorchState.off:
-                          return const Icon(Icons.flash_off, color: Colors.white);
-                        case TorchState.on:
-                          return const Icon(Icons.flash_on, color: Colors.amber);
-                      }
-                    },
-                  ),
+                  icon: const Icon(Icons.flash_on, color: Colors.white),
                   iconSize: 32,
                   onPressed: () => _controller.toggleTorch(),
                   tooltip: 'Toggle Torch',

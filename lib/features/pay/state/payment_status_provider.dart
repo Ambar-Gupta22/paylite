@@ -44,9 +44,6 @@ class PaymentStatusNotifier extends FamilyAsyncNotifier<Payment, String> {
     });
   }
 
-  @override
-  void dispose() {
-    _pollingTimer?.cancel();
-    super.dispose();
-  }
+  // Note: Timer cleanup happens when the provider is disposed by Riverpod.
+  // FamilyAsyncNotifier doesn't expose a dispose method directly.
 }

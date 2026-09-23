@@ -1,12 +1,11 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class QrPayload {
+  final String vpa;
+  final String? name;
+  final int? amountPaise;
 
-part 'qr_payload.freezed.dart';
-
-@freezed
-class QrPayload with _$QrPayload {
-  const factory QrPayload({
-    required String vpa,
-    String? name,
-    int? amountPaise,
-  }) = _QrPayload;
+  const QrPayload({
+    required this.vpa,
+    this.name,
+    this.amountPaise,
+  });
 }

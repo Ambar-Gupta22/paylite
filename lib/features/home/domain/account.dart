@@ -1,16 +1,19 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class Account {
+  final String maskedNumber;
+  final int balancePaise;
+  final String primaryVpa;
 
-part 'account.freezed.dart';
-part 'account.g.dart';
+  const Account({
+    required this.maskedNumber,
+    required this.balancePaise,
+    required this.primaryVpa,
+  });
 
-@freezed
-class Account with _$Account {
-  const factory Account({
-    required String id,
-    required String maskedNumber,
-    required int balancePaise,
-    required String primaryVpa,
-  }) = _Account;
-
-  factory Account.fromJson(Map<String, dynamic> json) => _$AccountFromJson(json);
+  factory Account.fromJson(Map<String, dynamic> json) {
+    return Account(
+      maskedNumber: json['maskedNumber'] as String,
+      balancePaise: json['balancePaise'] as int,
+      primaryVpa: json['primaryVpa'] as String,
+    );
+  }
 }

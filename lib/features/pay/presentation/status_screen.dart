@@ -34,6 +34,7 @@ class StatusScreen extends ConsumerWidget {
           child: AsyncValueView(
             value: statusState,
             onRetry: () => ref.invalidate(paymentStatusProvider(paymentId)),
+            loading: () => const Center(child: CircularProgressIndicator()),
             data: (payment) => _buildStatusContent(context, payment),
           ),
         ),
@@ -41,8 +42,8 @@ class StatusScreen extends ConsumerWidget {
     );
   }
 
-  void _cleanUpAndGoHome(BuildContext context, WidgetRef ref) {
-    ref.read(paymentFlowProvider.notifier).reset();
+  void _cleanUpAndGoHome(BuildContext context, WidgetRef? ref) {
+    ref?.read(paymentFlowProvider.notifier).reset();
     context.go('/home');
   }
 

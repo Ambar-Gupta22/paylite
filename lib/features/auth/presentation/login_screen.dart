@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/validators.dart';
 import '../state/session_provider.dart';
 import '../../../core/errors/bank_error.dart';
+import '../domain/session.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});

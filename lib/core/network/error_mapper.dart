@@ -11,7 +11,7 @@ class ErrorMapper {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
         case DioExceptionType.receiveTimeout:
-          return BankError.timeout(traceId: traceId);
+          return const BankError.timeout();
         case DioExceptionType.connectionError:
           return const BankError.networkError();
         case DioExceptionType.badResponse:

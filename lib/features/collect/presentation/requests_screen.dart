@@ -19,6 +19,7 @@ class RequestsScreen extends ConsumerWidget {
       body: AsyncValueView(
         value: requestsState,
         onRetry: () => ref.invalidate(collectRequestsProvider),
+        loading: () => const Center(child: CircularProgressIndicator()),
         data: (requests) {
           final pending = requests.where((r) => r.status == CollectStatus.pending).toList();
           
@@ -113,14 +114,15 @@ class _RequestCard extends ConsumerWidget {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
-                    // Send to pay screen but pre-filled and locked
-                    context.pushUri(Uri(
-                      path: '/pay',
-                      queryParameters: {
-                        'vpa': request.requesterVpa,
-                        'amount': request.amountPaise.toString(),
-                      },
-                    ));
+                    context.push(
+                      Uri(
+                        path: '/pay',
+                        queryParameters: {
+                          'vpa': request.requesterVpa,
+                          'amount': request.amountPaise.toString(),
+                        },
+                      ).toString(),
+                    );
                   },
                   child: const Text('Pay'),
                 ),

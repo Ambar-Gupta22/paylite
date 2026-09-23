@@ -72,6 +72,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return AsyncValueView(
       value: historyState,
       onRetry: () => ref.invalidate(historyProvider),
+      loading: () => const Center(child: CircularProgressIndicator()),
       data: (payments) {
         if (payments.isEmpty) return const Text('No recent payments yet.');
         // Show max 3 recent payments

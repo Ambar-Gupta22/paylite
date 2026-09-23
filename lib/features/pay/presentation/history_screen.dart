@@ -88,6 +88,7 @@ class HistoryScreen extends ConsumerWidget {
       body: AsyncValueView(
         value: historyState,
         onRetry: () => ref.invalidate(historyProvider),
+        loading: () => const Center(child: CircularProgressIndicator()),
         data: (payments) {
           if (payments.isEmpty) {
             return const Center(child: Text('No transactions found.'));

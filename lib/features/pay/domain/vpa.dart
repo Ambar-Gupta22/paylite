@@ -1,15 +1,16 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+class Vpa {
+  final String address;
+  final String verifiedName;
 
-part 'vpa.freezed.dart';
-part 'vpa.g.dart';
+  const Vpa({
+    required this.address,
+    required this.verifiedName,
+  });
 
-@freezed
-class Vpa with _$Vpa {
-  const factory Vpa({
-    required String address,
-    required String verifiedName,
-    required String bankName,
-  }) = _Vpa;
-
-  factory Vpa.fromJson(Map<String, dynamic> json) => _$VpaFromJson(json);
+  factory Vpa.fromJson(Map<String, dynamic> json) {
+    return Vpa(
+      address: json['address'] as String,
+      verifiedName: json['verifiedName'] as String,
+    );
+  }
 }
