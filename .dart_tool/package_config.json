@@ -140,6 +140,18 @@
       "languageVersion": "3.7"
     },
     {
+      "name": "device_info_plus",
+      "rootUri": "file:///C:/Users/Vinita/AppData/Local/Pub/Cache/hosted/pub.dev/device_info_plus-12.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "device_info_plus_platform_interface",
+      "rootUri": "file:///C:/Users/Vinita/AppData/Local/Pub/Cache/hosted/pub.dev/device_info_plus_platform_interface-7.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
       "name": "dio",
       "rootUri": "file:///C:/Users/Vinita/AppData/Local/Pub/Cache/hosted/pub.dev/dio-5.11.1",
       "packageUri": "lib/",
@@ -678,6 +690,12 @@
       "rootUri": "file:///C:/Users/Vinita/AppData/Local/Pub/Cache/hosted/pub.dev/win32-5.15.0",
       "packageUri": "lib/",
       "languageVersion": "3.8"
+    },
+    {
+      "name": "win32_registry",
+      "rootUri": "file:///C:/Users/Vinita/AppData/Local/Pub/Cache/hosted/pub.dev/win32_registry-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
     },
     {
       "name": "xdg_directories",
