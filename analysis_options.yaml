@@ -1,0 +1,25 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+  errors:
+    missing_required_param: error
+    missing_return: error
+
+linter:
+  rules:
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - avoid_print
+    - require_trailing_commas
