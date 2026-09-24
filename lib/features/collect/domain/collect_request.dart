@@ -24,7 +24,7 @@ class CollectRequest {
       amountPaise: json['amountPaise'] as int,
       note: json['note'] as String?,
       status: CollectStatus.values.firstWhere(
-        (e) => e.name == json['status'],
+        (e) => e.name.toLowerCase() == (json['status'] as String).toLowerCase(),
         orElse: () => CollectStatus.pending,
       ),
       createdAt: DateTime.parse(json['createdAt'] as String),

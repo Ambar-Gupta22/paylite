@@ -26,12 +26,12 @@ class Payment {
       id: json['id'] as String,
       amountPaise: json['amountPaise'] as int,
       status: PaymentStatus.values.firstWhere(
-        (e) => e.name == json['status'],
+        (e) => e.name.toLowerCase() == (json['status'] as String).toLowerCase(),
         orElse: () => PaymentStatus.pending,
       ),
       createdAt: DateTime.parse(json['createdAt'] as String),
       direction: PaymentDirection.values.firstWhere(
-        (e) => e.name == json['direction'],
+        (e) => e.name.toLowerCase() == (json['direction'] as String).toLowerCase(),
         orElse: () => PaymentDirection.sent,
       ),
       counterparty: json['counterparty'] as String?,

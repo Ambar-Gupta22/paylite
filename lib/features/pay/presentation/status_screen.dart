@@ -7,6 +7,8 @@ import '../../../core/widgets/async_value_view.dart';
 import '../domain/payment.dart';
 import '../state/payment_status_provider.dart';
 import '../state/payment_flow_notifier.dart';
+import '../state/history_provider.dart';
+import '../../home/state/account_provider.dart';
 
 class StatusScreen extends ConsumerWidget {
   final String paymentId;
@@ -43,7 +45,11 @@ class StatusScreen extends ConsumerWidget {
   }
 
   void _cleanUpAndGoHome(BuildContext context, WidgetRef? ref) {
-    ref?.read(paymentFlowProvider.notifier).reset();
+    if (ref != null) {
+      ref.read(paymentFlowProvider.notifier).reset();
+      ref.invalidate(historyProvider);
+      ref.invalidate(accountProvider); // also refresh the balance!
+    }
     context.go('/home');
   }
 
