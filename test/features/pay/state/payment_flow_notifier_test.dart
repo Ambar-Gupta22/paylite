@@ -5,6 +5,7 @@ import 'package:paylite/features/pay/state/payment_flow_notifier.dart';
 import 'package:paylite/features/pay/data/payment_repository.dart';
 import 'package:paylite/core/providers.dart';
 import 'package:paylite/features/pay/domain/payment.dart';
+import 'package:paylite/features/pay/domain/vpa.dart';
 
 class MockPaymentRepository extends Mock implements PaymentRepository {}
 
@@ -30,7 +31,7 @@ void main() {
     });
 
     test('initFlow transitions to reviewing and generates key', () {
-      final vpa = Vpa(
+      const vpa = Vpa(
         address: 'ramesh@paylite',
         verifiedName: 'Ramesh Singh',
         bankName: 'PayLite Bank',
@@ -69,7 +70,7 @@ void main() {
       });
 
       final notifier = container.read(paymentFlowProvider.notifier);
-      final vpa = Vpa(
+      const vpa = Vpa(
         address: 'ramesh@paylite',
         verifiedName: 'Ramesh Singh',
         bankName: 'PayLite Bank',

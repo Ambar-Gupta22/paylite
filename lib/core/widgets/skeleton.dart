@@ -55,7 +55,7 @@ class _SkeletonState extends State<Skeleton>
       width: widget.width,
       height: widget.height,
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(opacity * 0.5),
+        color: Colors.grey.withValues(alpha: opacity * 0.5),
         borderRadius: BorderRadius.circular(widget.borderRadius),
       ),
     );

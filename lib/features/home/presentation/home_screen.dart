@@ -102,17 +102,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: AsyncValueView(
           value: accountState,
           onRetry: () => ref.invalidate(accountProvider),
-          loading: () => Column(
+          loading: () => const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'Available Balance',
                 style: TextStyle(color: Colors.white70),
               ),
-              const SizedBox(height: 8),
-              const Skeleton(width: 150, height: 40),
-              const SizedBox(height: 16),
-              const Skeleton(width: 200, height: 20),
+              SizedBox(height: 8),
+              Skeleton(width: 150, height: 40),
+              SizedBox(height: 16),
+              Skeleton(width: 200, height: 20),
             ],
           ),
           data: (account) => Column(

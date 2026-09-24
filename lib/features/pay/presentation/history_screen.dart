@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/utils/money.dart';
-import '../../../core/utils/date_format.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/payment_tile.dart';
-import '../domain/payment.dart';
 import '../state/history_provider.dart';
 
 class HistoryScreen extends ConsumerWidget {

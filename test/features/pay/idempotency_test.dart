@@ -3,7 +3,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:dio/dio.dart';
 import 'package:paylite/features/pay/data/payment_repository.dart';
 import 'package:paylite/core/network/api_client.dart';
-import 'package:paylite/features/pay/domain/payment.dart';
 
 class MockApiClient extends Mock implements ApiClient {}
 
@@ -26,7 +25,7 @@ void main() {
   group('Idempotency', () {
     test('A unit test proves one key produces exactly one debit by sending the key in headers', () async {
       // Arrange
-      final idempotencyKey = 'test-key-123';
+      const idempotencyKey = 'test-key-123';
       final mockResponse = Response(
         requestOptions: RequestOptions(path: '/payments'),
         data: {

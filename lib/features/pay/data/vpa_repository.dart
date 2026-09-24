@@ -1,6 +1,3 @@
-import 'package:dio/dio.dart';
-
-import '../../../core/errors/bank_error.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/error_mapper.dart';
 import '../domain/vpa.dart';

@@ -5,13 +5,13 @@ void main() {
   group('Validators', () {
     group('validateVpa', () {
       test('returns error for empty VPA', () {
-        expect(Validators.validateVpa(''), 'Please enter a UPI ID');
+        expect(Validators.validateVpa(''), 'UPI ID is required');
       });
 
       test('returns error for VPA without @', () {
         expect(
           Validators.validateVpa('priyasharma'),
-          'Invalid UPI ID format (e.g., name@bank)',
+          'Invalid UPI ID format (must contain @)',
         );
       });
 
@@ -54,11 +54,11 @@ void main() {
       });
 
       test('returns error for short PIN', () {
-        expect(Validators.validatePin('123'), 'PIN must be 4 digits');
+        expect(Validators.validatePin('123'), 'PIN must be exactly 4 digits');
       });
 
       test('returns error for long PIN', () {
-        expect(Validators.validatePin('12345'), 'PIN must be 4 digits');
+        expect(Validators.validatePin('12345'), 'PIN must be exactly 4 digits');
       });
 
       test('returns null for valid 4-digit PIN', () {
