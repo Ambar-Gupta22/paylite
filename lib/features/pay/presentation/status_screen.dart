@@ -20,43 +20,44 @@ class StatusScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final statusState = ref.watch(paymentStatusProvider(paymentId));
 
-    return WillPopScope(
-      onWillPop: () async {
-        _cleanUpAndGoHome(context, ref);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) {
+          _cleanUpAndGoHome(context, ref);
+        }
       },
       child: SecureScreen(
         child: Scaffold(
           appBar: AppBar(
-          title: const Text('Payment Status'),
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => _cleanUpAndGoHome(context, ref),
+            title: const Text('Payment Status'),
+            leading: IconButton(
+              icon: const Icon(Icons.close),
+              tooltip: 'Close',
+              onPressed: () => _cleanUpAndGoHome(context, ref),
+            ),
           ),
-        ),
-        body: SafeArea(
-          child: AsyncValueView(
-            value: statusState,
-            onRetry: () => ref.invalidate(paymentStatusProvider(paymentId)),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            data: (payment) => _buildStatusContent(context, payment),
+          body: SafeArea(
+            child: AsyncValueView(
+              value: statusState,
+              onRetry: () => ref.invalidate(paymentStatusProvider(paymentId)),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              data: (payment) => _buildStatusContent(context, ref, payment),
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
-  void _cleanUpAndGoHome(BuildContext context, WidgetRef? ref) {
-    if (ref != null) {
-      ref.read(paymentFlowProvider.notifier).reset();
-      ref.invalidate(historyProvider);
-      ref.invalidate(accountProvider); // also refresh the balance!
-    }
+  void _cleanUpAndGoHome(BuildContext context, WidgetRef ref) {
+    ref.read(paymentFlowProvider.notifier).reset();
+    ref.invalidate(historyProvider);
+    ref.invalidate(accountProvider);
     context.go('/home');
   }
 
-  Widget _buildStatusContent(BuildContext context, Payment payment) {
+  Widget _buildStatusContent(BuildContext context, WidgetRef ref, Payment payment) {
     IconData icon;
     Color color;
     String statusText;
@@ -137,7 +138,7 @@ class StatusScreen extends ConsumerWidget {
           const Spacer(flex: 2),
           if (payment.status != PaymentStatus.pending)
             ElevatedButton(
-              onPressed: () => _cleanUpAndGoHome(context, null), // using null ref since we already reset
+              onPressed: () => _cleanUpAndGoHome(context, ref),
               child: const Text('Done'),
             ),
         ],

@@ -12,6 +12,12 @@ class PaymentStatusNotifier extends FamilyAsyncNotifier<Payment, String> {
 
   @override
   Future<Payment> build(String arg) async {
+    // Cancel timer when provider is disposed (user navigates away)
+    ref.onDispose(() {
+      _pollingTimer?.cancel();
+      _pollingTimer = null;
+    });
+
     final repo = ref.watch(paymentRepositoryProvider);
     final payment = await repo.getPaymentStatus(arg);
 
@@ -37,13 +43,9 @@ class PaymentStatusNotifier extends FamilyAsyncNotifier<Payment, String> {
           timer.cancel();
           _pollingTimer = null;
         }
-      } catch (e, st) {
-        // Just log or ignore network errors during polling, keep previous state
-        // In a real app we might retry a few times before showing an error
+      } catch (e) {
+        // Keep previous state on network error during polling
       }
     });
   }
-
-  // Note: Timer cleanup happens when the provider is disposed by Riverpod.
-  // FamilyAsyncNotifier doesn't expose a dispose method directly.
 }

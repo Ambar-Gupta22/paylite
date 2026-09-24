@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import '../../../core/providers.dart';
@@ -11,20 +11,25 @@ final sessionProvider = AsyncNotifierProvider<SessionNotifier, Session?>(() {
 class SessionNotifier extends AsyncNotifier<Session?> {
   @override
   Future<Session?> build() async {
-    final store = ref.watch(secureSessionStoreProvider);
-    final biometric = ref.watch(biometricServiceProvider);
+    final store = ref.read(secureSessionStoreProvider);
     
+    // Simply try to restore the session from secure storage.
+    // We use ref.read (not ref.watch) so that this provider does NOT
+    // get rebuilt whenever unrelated providers touch the dependency graph.
     final session = await store.getSession();
     
-    if (session != null) {
-      // If returning user, prompt for biometrics before restoring session fully
+    if (session != null && !kIsWeb) {
+      // On native platforms, optionally prompt biometrics.
+      // On web (Chrome testing), skip biometrics entirely.
+      final biometric = ref.read(biometricServiceProvider);
       if (await biometric.isAvailable()) {
-        final authenticated = await biometric.authenticate('Verify your identity to open PayLite');
+        final authenticated = await biometric.authenticate(
+          'Verify your identity to open PayLite',
+        );
         if (!authenticated) {
-          // If they cancel biometric, we don't log them out entirely, but we don't emit a session yet
-          // For simplicity in this app, we'll force logout or just throw an error.
-          // In a real app, they'd fall back to PIN.
-          throw Exception('Biometric authentication failed or canceled');
+          // User cancelled — clear session and force re-login
+          await store.clearSession();
+          return null;
         }
       }
     }
@@ -39,21 +44,17 @@ class SessionNotifier extends AsyncNotifier<Session?> {
       final store = ref.read(secureSessionStoreProvider);
       
       // Get a simple device ID
-      String deviceId = 'unknown-device';
-      try {
-        final deviceInfo = DeviceInfoPlugin();
-        if (Platform.isAndroid) {
-          final androidInfo = await deviceInfo.androidInfo;
-          deviceId = androidInfo.id;
-        } else if (Platform.isIOS) {
-          final iosInfo = await deviceInfo.iosInfo;
-          deviceId = iosInfo.identifierForVendor ?? 'unknown-ios-device';
-        } else if (Platform.isWindows) {
-          deviceId = 'windows-dev-machine'; // For web/desktop testing
+      String deviceId = 'web-browser';
+      if (!kIsWeb) {
+        try {
+          final deviceInfo = DeviceInfoPlugin();
+          final info = await deviceInfo.deviceInfo;
+          deviceId = info.data['id']?.toString() ?? 
+                     info.data['identifierForVendor']?.toString() ??
+                     'device-${DateTime.now().millisecondsSinceEpoch}';
+        } catch (_) {
+          deviceId = 'device-${DateTime.now().millisecondsSinceEpoch}';
         }
-      } catch (_) {
-        // Fallback
-        deviceId = 'device-${DateTime.now().millisecondsSinceEpoch}';
       }
 
       final session = await repo.login(customerId, pin, deviceId);

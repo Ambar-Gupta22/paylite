@@ -42,11 +42,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         onRefresh: () async {
           ref.invalidate(accountProvider);
           ref.invalidate(historyProvider);
-          // Wait for the new future to complete
-          try {
-            await ref.read(accountProvider.future);
-            await ref.read(historyProvider.future);
-          } catch (_) {}
+          // Give the providers a moment to start fetching
+          await Future.delayed(const Duration(milliseconds: 500));
         },
         child: ListView(
           padding: const EdgeInsets.all(16.0),

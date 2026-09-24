@@ -72,11 +72,12 @@ class _PinScreenState extends ConsumerState<PinScreen> {
 
     final isProcessing = flowState.stage == FlowStage.processing;
 
-    return WillPopScope(
-      onWillPop: () async {
-        if (isProcessing) return false;
-        ref.read(paymentFlowProvider.notifier).cancelToReview();
-        return true;
+    return PopScope(
+      canPop: !isProcessing,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) {
+          ref.read(paymentFlowProvider.notifier).cancelToReview();
+        }
       },
       child: SecureScreen(
         child: Scaffold(
