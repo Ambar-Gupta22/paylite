@@ -31,11 +31,7 @@ void main() {
     });
 
     test('initFlow transitions to reviewing and generates key', () {
-      const vpa = Vpa(
-        address: 'ramesh@paylite',
-        verifiedName: 'Ramesh Singh',
-        bankName: 'PayLite Bank',
-      );
+      const vpa = Vpa(address: 'ramesh@paylite', verifiedName: 'Ramesh Singh');
       container
           .read(paymentFlowProvider.notifier)
           .initFlow('ramesh@paylite', 50000, '', vpa);
@@ -70,11 +66,7 @@ void main() {
       });
 
       final notifier = container.read(paymentFlowProvider.notifier);
-      const vpa = Vpa(
-        address: 'ramesh@paylite',
-        verifiedName: 'Ramesh Singh',
-        bankName: 'PayLite Bank',
-      );
+      const vpa = Vpa(address: 'ramesh@paylite', verifiedName: 'Ramesh Singh');
       notifier.initFlow('ramesh@paylite', 50000, '', vpa);
       notifier.goToPin();
 
