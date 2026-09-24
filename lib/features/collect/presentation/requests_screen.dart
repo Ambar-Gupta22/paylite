@@ -15,7 +15,19 @@ class RequestsScreen extends ConsumerWidget {
     final requestsState = ref.watch(collectRequestsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Pending Requests')),
+      appBar: AppBar(
+        title: const Text('Pending Requests'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () => ref.invalidate(collectRequestsProvider),
+          ),
+        ],
+      ),
       body: AsyncValueView(
         value: requestsState,
         onRetry: () => ref.invalidate(collectRequestsProvider),
@@ -24,19 +36,38 @@ class RequestsScreen extends ConsumerWidget {
           final pending = requests.where((r) => r.status == CollectStatus.pending).toList();
           
           if (pending.isEmpty) {
-            return const Center(child: Text('No pending requests.'));
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.inbox_outlined, size: 80, color: Colors.grey[400]),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No pending requests',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Requests you receive will appear here.',
+                    style: TextStyle(color: Colors.grey[500]),
+                  ),
+                ],
+              ),
+            );
           }
           
-          return RefreshIndicator(
-            onRefresh: () => ref.refresh(collectRequestsProvider.future),
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: pending.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                return _RequestCard(request: pending[index]);
-              },
-            ),
+          return ListView.separated(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            itemCount: pending.length,
+            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            itemBuilder: (context, index) {
+              return _RequestCard(request: pending[index]);
+            },
           );
         },
       ),

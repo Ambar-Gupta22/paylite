@@ -24,7 +24,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
   }
 
   void _onNumberTapped(String number) {
-    if (_pin.length < 6) {
+    if (_pin.length < 4) {
       setState(() => _pin += number);
     }
   }
@@ -36,7 +36,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
   }
 
   void _onSubmit() {
-    if (_pin.length >= 4 && _pin.length <= 6) {
+    if (_pin.length == 4) {
       // Hash PIN before sending
       final bytes = utf8.encode(_pin);
       final digest = sha256.convert(bytes);
@@ -98,13 +98,13 @@ class _PinScreenState extends ConsumerState<PinScreen> {
             children: [
               const Spacer(),
               Text(
-                'Enter 4-6 digit UPI PIN',
+                'Enter 4 digit UPI PIN',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(6, (index) {
+                children: List.generate(4, (index) {
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 8),
                     width: 16,

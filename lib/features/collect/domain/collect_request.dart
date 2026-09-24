@@ -27,7 +27,9 @@ class CollectRequest {
         (e) => e.name.toLowerCase() == (json['status'] as String).toLowerCase(),
         orElse: () => CollectStatus.pending,
       ),
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt'] as String) 
+          : DateTime.now(),
     );
   }
 }

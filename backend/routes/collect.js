@@ -63,6 +63,7 @@ router.post('/', (req, res) => {
     amountPaise,
     note,
     status: 'PENDING',
+    createdAt: new Date().toISOString(),
     expiresAt: new Date(Date.now() + 48 * 3600000).toISOString(), // 48h from now
   };
 

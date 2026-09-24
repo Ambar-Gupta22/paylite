@@ -116,7 +116,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _pinController,
                     obscureText: _obscurePin,
                     decoration: InputDecoration(
-                      labelText: '4-6 Digit PIN',
+                      labelText: '4 Digit PIN',
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(

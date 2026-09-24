@@ -189,24 +189,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildActionItem(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
-    return Tooltip(
-      message: label,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-                child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 28),
-              ),
-              const SizedBox(height: 8),
-              Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-            ],
-          ),
+    return InkWell(
+      onTap: () {
+        // Yield event loop to prevent mouse_tracker assertion on Web route transitions
+        Future.delayed(const Duration(milliseconds: 50), onTap);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 28),
+            ),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+          ],
         ),
       ),
     );

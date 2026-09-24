@@ -66,6 +66,7 @@ const collectRequests = [
     amountPaise: 25000, // 250 INR
     note: 'Movie tickets',
     status: 'PENDING',
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
     expiresAt: new Date(Date.now() + 86400000).toISOString(), // expires in 1 day
   },
   // An expired request
@@ -76,6 +77,7 @@ const collectRequests = [
     amountPaise: 10000,
     note: 'Coffee',
     status: 'PENDING',
+    createdAt: new Date(Date.now() - 172800000).toISOString(),
     expiresAt: new Date(Date.now() - 3600000).toISOString(), // expired 1 hr ago
   }
 ];

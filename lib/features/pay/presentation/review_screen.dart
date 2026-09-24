@@ -34,7 +34,9 @@ class ReviewScreen extends ConsumerWidget {
                   radius: 40,
                   backgroundColor: Theme.of(context).colorScheme.primaryContainer,
                   child: Text(
-                    flowState.verifiedVpa?.verifiedName.substring(0, 1).toUpperCase() ?? '?',
+                    flowState.verifiedVpa?.verifiedName != null && flowState.verifiedVpa!.verifiedName.isNotEmpty
+                        ? flowState.verifiedVpa!.verifiedName.substring(0, 1).toUpperCase()
+                        : '?',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),

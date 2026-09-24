@@ -24,7 +24,7 @@ class StatusScreen extends ConsumerWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) {
-          _cleanUpAndGoHome(context, ref);
+          _handleClose(context, ref, statusState.valueOrNull);
         }
       },
       child: SecureScreen(
@@ -34,7 +34,7 @@ class StatusScreen extends ConsumerWidget {
             leading: IconButton(
               icon: const Icon(Icons.close),
               tooltip: 'Close',
-              onPressed: () => _cleanUpAndGoHome(context, ref),
+              onPressed: () => _handleClose(context, ref, statusState.valueOrNull),
             ),
           ),
           body: SafeArea(
@@ -48,6 +48,38 @@ class StatusScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// Show a warning dialog if payment is still processing before navigating away.
+  Future<void> _handleClose(BuildContext context, WidgetRef ref, Payment? payment) async {
+    if (payment != null && payment.status == PaymentStatus.pending) {
+      final shouldLeave = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Payment Processing'),
+          content: const Text(
+            'Your payment is still being processed. '
+            'Leaving now won\'t cancel the payment, but you won\'t see the result here.\n\n'
+            'You can check the status later in your payment history.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Wait'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Leave Anyway'),
+            ),
+          ],
+        ),
+      );
+      if (shouldLeave != true) return;
+    }
+    if (!context.mounted) return;
+    _cleanUpAndGoHome(context, ref);
   }
 
   void _cleanUpAndGoHome(BuildContext context, WidgetRef ref) {
@@ -136,7 +168,25 @@ class StatusScreen extends ConsumerWidget {
             ),
           ),
           const Spacer(flex: 2),
-          if (payment.status != PaymentStatus.pending)
+          if (payment.status == PaymentStatus.pending)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 12),
+                    Text('Please wait, do not close the app...'),
+                  ],
+                ),
+              ),
+            )
+          else
             ElevatedButton(
               onPressed: () => _cleanUpAndGoHome(context, ref),
               child: const Text('Done'),
@@ -153,7 +203,13 @@ class StatusScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: const TextStyle(color: Colors.grey)),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

@@ -33,8 +33,8 @@ class Validators {
     if (value == null || value.isEmpty) {
       return 'PIN is required';
     }
-    if (value.length < 4 || value.length > 6) {
-      return 'PIN must be 4 to 6 digits';
+    if (value.length != 4) {
+      return 'PIN must be exactly 4 digits';
     }
     if (!RegExp(r'^\d+$').hasMatch(value)) {
       return 'PIN must contain only numbers';
