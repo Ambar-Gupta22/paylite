@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
 import '../security/secure_session_store.dart';
 import 'api_config.dart';
 
@@ -26,7 +27,7 @@ class ApiClient {
             options.headers['Authorization'] = 'Bearer ${session.token}';
             options.headers['X-Device-Id'] = session.deviceId;
           }
-          
+
           // Log request (excluding sensitive headers)
           if (kDebugMode) {
             debugPrint('[API Request] ${options.method} ${options.uri}');
@@ -36,17 +37,21 @@ class ApiClient {
         onResponse: (response, handler) {
           if (kDebugMode) {
             final traceId = response.headers.value('x-trace-id') ?? 'none';
-            debugPrint('[API Response] ${response.statusCode} ${response.requestOptions.path} (trace: $traceId)');
+            debugPrint(
+              '[API Response] ${response.statusCode} ${response.requestOptions.path} (trace: $traceId)',
+            );
           }
           return handler.next(response);
         },
         onError: (DioException e, handler) {
           if (kDebugMode) {
             final traceId = e.response?.headers.value('x-trace-id') ?? 'none';
-            debugPrint('[API Error] ${e.response?.statusCode} ${e.requestOptions.path} (trace: $traceId)');
+            debugPrint(
+              '[API Error] ${e.response?.statusCode} ${e.requestOptions.path} (trace: $traceId)',
+            );
           }
-          
-          // Note: 401 interceptor for global logout will be handled via Riverpod 
+
+          // Note: 401 interceptor for global logout will be handled via Riverpod
           // provider listening to a stream, or directly in the repository wrapper.
           return handler.next(e);
         },

@@ -29,11 +29,12 @@ class Payment {
         (e) => e.name.toLowerCase() == (json['status'] as String).toLowerCase(),
         orElse: () => PaymentStatus.pending,
       ),
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt'] as String) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
       direction: PaymentDirection.values.firstWhere(
-        (e) => e.name.toLowerCase() == (json['direction'] as String).toLowerCase(),
+        (e) =>
+            e.name.toLowerCase() == (json['direction'] as String).toLowerCase(),
         orElse: () => PaymentDirection.sent,
       ),
       counterparty: json['counterparty'] as String?,

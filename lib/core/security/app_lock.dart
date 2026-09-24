@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Since AppLock needs to interact with authentication and biometric state,
 // we will wire it up in Phase 3 when providers are fully set up.
@@ -30,9 +29,10 @@ class AppLockObserver extends WidgetsBindingObserver {
 
       if (_isLocked) {
         onRequireAuth();
-        _isLocked = false; // Reset lock after prompting (auth screen handles the rest)
+        _isLocked =
+            false; // Reset lock after prompting (auth screen handles the rest)
       }
-      
+
       _pausedAt = null;
     }
   }

@@ -1,5 +1,7 @@
 import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/errors/bank_error.dart';
 import '../../../core/providers.dart';
 import '../domain/payment.dart';
@@ -59,9 +61,10 @@ class PaymentFlowState {
   }
 }
 
-final paymentFlowProvider = NotifierProvider<PaymentFlowNotifier, PaymentFlowState>(() {
-  return PaymentFlowNotifier();
-});
+final paymentFlowProvider =
+    NotifierProvider<PaymentFlowNotifier, PaymentFlowState>(() {
+      return PaymentFlowNotifier();
+    });
 
 class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
   @override
@@ -69,8 +72,9 @@ class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
 
   void initFlow(String vpa, int amount, String note, Vpa verifiedVpa) {
     // Generate idempotency key ONCE when we start review
-    final idKey = '${DateTime.now().millisecondsSinceEpoch}-${Random().nextInt(10000)}';
-    
+    final idKey =
+        '${DateTime.now().millisecondsSinceEpoch}-${Random().nextInt(10000)}';
+
     state = state.copyWith(
       stage: FlowStage.reviewing,
       payeeVpa: vpa,
@@ -86,7 +90,7 @@ class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
     if (state.stage != FlowStage.reviewing) return;
     state = state.copyWith(stage: FlowStage.enteringPin);
   }
-  
+
   void cancelToReview() {
     state = state.copyWith(stage: FlowStage.reviewing);
   }
@@ -106,10 +110,7 @@ class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
         idempotencyKey: state.idempotencyKey!,
       );
 
-      state = state.copyWith(
-        stage: FlowStage.completed,
-        finalPayment: payment,
-      );
+      state = state.copyWith(stage: FlowStage.completed, finalPayment: payment);
     } on BankError catch (e) {
       if (e == const BankError.timeout()) {
         // Create a dummy pending payment since we don't know the status
@@ -127,10 +128,7 @@ class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
           finalPayment: pendingPayment,
         );
       } else {
-        state = state.copyWith(
-          stage: FlowStage.error,
-          error: e,
-        );
+        state = state.copyWith(stage: FlowStage.error, error: e);
       }
     } catch (e) {
       state = state.copyWith(
@@ -139,7 +137,7 @@ class PaymentFlowNotifier extends Notifier<PaymentFlowState> {
       );
     }
   }
-  
+
   void reset() {
     state = const PaymentFlowState();
   }

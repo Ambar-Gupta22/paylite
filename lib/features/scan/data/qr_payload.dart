@@ -3,9 +3,5 @@ class QrPayload {
   final String? name;
   final int? amountPaise;
 
-  const QrPayload({
-    required this.vpa,
-    this.name,
-    this.amountPaise,
-  });
+  const QrPayload({required this.vpa, this.name, this.amountPaise});
 }

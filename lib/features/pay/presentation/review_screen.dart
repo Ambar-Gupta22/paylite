@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/utils/money.dart';
 import '../../../core/widgets/secure_screen.dart';
 import '../state/payment_flow_notifier.dart';
@@ -32,10 +33,15 @@ class ReviewScreen extends ConsumerWidget {
                 const Spacer(),
                 CircleAvatar(
                   radius: 40,
-                  backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .primaryContainer,
                   child: Text(
-                    flowState.verifiedVpa?.verifiedName != null && flowState.verifiedVpa!.verifiedName.isNotEmpty
-                        ? flowState.verifiedVpa!.verifiedName.substring(0, 1).toUpperCase()
+                    flowState.verifiedVpa?.verifiedName != null &&
+                            flowState.verifiedVpa!.verifiedName.isNotEmpty
+                        ? flowState.verifiedVpa!.verifiedName
+                              .substring(0, 1)
+                              .toUpperCase()
                         : '?',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
@@ -51,9 +57,8 @@ class ReviewScreen extends ConsumerWidget {
                 Text(
                   flowState.payeeVpa ?? '',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium
+                      ?.copyWith(color: Colors.grey[600]),
                 ),
                 const SizedBox(height: 32),
                 Text(
@@ -67,7 +72,10 @@ class ReviewScreen extends ConsumerWidget {
                 if (flowState.note != null && flowState.note!.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(16),
@@ -88,7 +96,10 @@ class ReviewScreen extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                  child: const Text('Confirm & Pay', style: TextStyle(fontSize: 16)),
+                  child: const Text(
+                    'Confirm & Pay',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ],
             ),

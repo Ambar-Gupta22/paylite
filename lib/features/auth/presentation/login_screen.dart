@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/utils/validators.dart';
 import '../state/session_provider.dart';
 import '../../../core/errors/bank_error.dart';
@@ -28,14 +29,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    
+
     // Clear keyboard
     FocusScope.of(context).unfocus();
 
-    await ref.read(sessionProvider.notifier).login(
-      _customerIdController.text.trim(),
-      _pinController.text,
-    );
+    await ref
+        .read(sessionProvider.notifier)
+        .login(_customerIdController.text.trim(), _pinController.text);
   }
 
   @override
@@ -58,7 +58,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         data: (session) {
           if (session != null) {
             // Login success, router will automatically redirect because it listens to sessionProvider
-            context.go('/home'); 
+            context.go('/home');
           }
         },
       );
@@ -87,17 +87,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Text(
                     'Welcome to PayLite',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.headlineMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Sign in to manage your money securely',
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                    style: Theme.of(context).textTheme.bodyLarge
+                        ?.copyWith(color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 48),
                   TextFormField(
@@ -120,8 +118,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       prefixIcon: const Icon(Icons.lock_outline),
                       border: const OutlineInputBorder(),
                       suffixIcon: IconButton(
-                        icon: Icon(_obscurePin ? Icons.visibility : Icons.visibility_off),
-                        onPressed: () => setState(() => _obscurePin = !_obscurePin),
+                        icon: Icon(
+                          _obscurePin ? Icons.visibility : Icons.visibility_off,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscurePin = !_obscurePin),
                         tooltip: _obscurePin ? 'Show PIN' : 'Hide PIN',
                       ),
                     ),
@@ -136,13 +137,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
-                    child: isLoading 
-                      ? const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Sign In', style: TextStyle(fontSize: 16)),
+                    child: isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Sign In', style: TextStyle(fontSize: 16)),
                   ),
                   const SizedBox(height: 16),
                   if (sessionState.hasError && !isLoading) ...[
@@ -150,9 +151,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Text(
                       'Failed to connect to server. Please try again.',
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
-                    )
-                  ]
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

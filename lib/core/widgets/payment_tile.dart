@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../features/pay/domain/payment.dart';
 import '../utils/date_format.dart';
 import '../utils/money.dart';
@@ -12,10 +13,10 @@ class PaymentTile extends StatelessWidget {
     final isSent = payment.direction == PaymentDirection.sent;
     final color = isSent ? Colors.black87 : Colors.green[700];
     final prefix = isSent ? '-' : '+';
-    
+
     IconData statusIcon;
     Color statusColor;
-    
+
     switch (payment.status) {
       case PaymentStatus.success:
         statusIcon = Icons.check_circle;
@@ -60,8 +61,12 @@ class PaymentTile extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16,
-              color: payment.status == PaymentStatus.failed ? Colors.grey : color,
-              decoration: payment.status == PaymentStatus.failed ? TextDecoration.lineThrough : null,
+              color: payment.status == PaymentStatus.failed
+                  ? Colors.grey
+                  : color,
+              decoration: payment.status == PaymentStatus.failed
+                  ? TextDecoration.lineThrough
+                  : null,
             ),
           ),
         ],

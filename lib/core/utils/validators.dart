@@ -16,7 +16,7 @@ class Validators {
     // Remove formatting like commas
     final cleanValue = value.replaceAll(',', '');
     final amount = double.tryParse(cleanValue);
-    
+
     if (amount == null) {
       return 'Invalid amount';
     }

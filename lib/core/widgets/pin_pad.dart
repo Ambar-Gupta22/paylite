@@ -35,7 +35,11 @@ class PinPad extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildActionButton(context, Icons.backspace_outlined, onDeleteTapped),
+            _buildActionButton(
+              context,
+              Icons.backspace_outlined,
+              onDeleteTapped,
+            ),
             _buildButton(context, '0'),
             _buildSubmitButton(context),
           ],
@@ -70,7 +74,11 @@ class PinPad extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(BuildContext context, IconData icon, VoidCallback onPressed) {
+  Widget _buildActionButton(
+    BuildContext context,
+    IconData icon,
+    VoidCallback onPressed,
+  ) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(4.0),
@@ -84,7 +92,7 @@ class PinPad extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildSubmitButton(BuildContext context) {
     final isEnabled = currentLength >= minLength && currentLength <= maxLength;
     return Expanded(

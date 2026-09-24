@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/secure_screen.dart';
 import '../state/vpa_lookup_provider.dart';
@@ -27,14 +28,14 @@ class _PayScreenState extends ConsumerState<PayScreen> {
   late final TextEditingController _vpaController;
   late final TextEditingController _amountController;
   final _noteController = TextEditingController();
-  
+
   bool _isVpaVerified = false;
 
   @override
   void initState() {
     super.initState();
     _vpaController = TextEditingController(text: widget.initialVpa);
-    
+
     // If QR provided an amount in paise, convert it to rupees for the text field
     String displayAmount = '';
     if (widget.initialAmount != null) {
@@ -44,7 +45,7 @@ class _PayScreenState extends ConsumerState<PayScreen> {
       }
     }
     _amountController = TextEditingController(text: displayAmount);
-    
+
     // If we have an initial VPA from QR, we should verify it immediately
     if (widget.initialVpa != null && widget.initialVpa!.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,10 +69,10 @@ class _PayScreenState extends ConsumerState<PayScreen> {
       );
       return;
     }
-    
+
     // Unfocus keyboard
     FocusScope.of(context).unfocus();
-    
+
     // Read the provider asynchronously
     try {
       await ref.read(vpaLookupProvider(_vpaController.text).future);
@@ -91,29 +92,29 @@ class _PayScreenState extends ConsumerState<PayScreen> {
 
   void _onContinue() {
     if (!_formKey.currentState!.validate()) return;
-    
+
     final vpa = ref.read(vpaLookupProvider(_vpaController.text)).valueOrNull;
     if (vpa == null) return;
-    
-    final amountRupees = double.parse(_amountController.text.replaceAll(',', ''));
-    final amountPaise = (amountRupees * 100).round();
-    
-    ref.read(paymentFlowProvider.notifier).initFlow(
-      _vpaController.text,
-      amountPaise,
-      _noteController.text,
-      vpa,
+
+    final amountRupees = double.parse(
+      _amountController.text.replaceAll(',', ''),
     );
-    
+    final amountPaise = (amountRupees * 100).round();
+
+    ref
+        .read(paymentFlowProvider.notifier)
+        .initFlow(_vpaController.text, amountPaise, _noteController.text, vpa);
+
     context.push('/pay/review');
   }
 
   @override
   Widget build(BuildContext context) {
     final vpaState = ref.watch(vpaLookupProvider(_vpaController.text));
-    
+
     // Lock amount field if it was provided by a fixed QR code
-    final isAmountLocked = widget.initialAmount != null && widget.initialAmount!.isNotEmpty;
+    final isAmountLocked =
+        widget.initialAmount != null && widget.initialAmount!.isNotEmpty;
 
     return SecureScreen(
       child: Scaffold(
@@ -130,15 +131,15 @@ class _PayScreenState extends ConsumerState<PayScreen> {
                   decoration: InputDecoration(
                     labelText: 'UPI ID / VPA',
                     border: const OutlineInputBorder(),
-                    suffixIcon: vpaState.isLoading 
-                      ? const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : TextButton(
-                          onPressed: _verifyVpa,
-                          child: const Text('Verify'),
-                        ),
+                    suffixIcon: vpaState.isLoading
+                        ? const Padding(
+                            padding: EdgeInsets.all(12.0),
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : TextButton(
+                            onPressed: _verifyVpa,
+                            child: const Text('Verify'),
+                          ),
                   ),
                   validator: Validators.validateVpa,
                   onChanged: (_) {
@@ -150,11 +151,18 @@ class _PayScreenState extends ConsumerState<PayScreen> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                      const Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 16,
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         vpaState.valueOrNull!.verifiedName,
-                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: Colors.green,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
                   ),

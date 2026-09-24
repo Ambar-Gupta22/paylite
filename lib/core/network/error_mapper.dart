@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+
 import '../errors/bank_error.dart';
 
 class ErrorMapper {
   static BankError map(dynamic error) {
     if (error is DioException) {
       final traceId = error.response?.headers.value('x-trace-id');
-      
+
       switch (error.type) {
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.sendTimeout:
@@ -17,9 +18,10 @@ class ErrorMapper {
         case DioExceptionType.badResponse:
           final statusCode = error.response?.statusCode;
           final responseData = error.response?.data;
-          
+
           String message = 'Unknown error';
-          if (responseData is Map<String, dynamic> && responseData['error'] != null) {
+          if (responseData is Map<String, dynamic> &&
+              responseData['error'] != null) {
             message = responseData['error']['message']?.toString() ?? message;
           }
 
@@ -40,12 +42,12 @@ class ErrorMapper {
           return const BankError.networkError();
       }
     }
-    
+
     // Log unexpected exceptions in debug mode
     if (kDebugMode) {
       debugPrint('[ErrorMapper] Unexpected error: $error');
     }
-    
+
     return const BankError.serverError();
   }
 }

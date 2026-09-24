@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../core/errors/bank_error.dart';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/error_mapper.dart';
 import '../domain/payment.dart';
@@ -25,11 +25,7 @@ class PaymentRepository {
           'note': note,
           'pinHash': pinHash,
         },
-        options: Options(
-          headers: {
-            'Idempotency-Key': idempotencyKey,
-          },
-        ),
+        options: Options(headers: {'Idempotency-Key': idempotencyKey}),
       );
 
       return Payment.fromJson(response.data);
@@ -66,7 +62,9 @@ class PaymentRepository {
       );
 
       final List<dynamic> itemsJson = response.data['items'];
-      final List<Payment> items = itemsJson.map((json) => Payment.fromJson(json)).toList();
+      final List<Payment> items = itemsJson
+          .map((json) => Payment.fromJson(json))
+          .toList();
       final String? nextCursor = response.data['nextCursor'];
 
       return (items: items, nextCursor: nextCursor);

@@ -13,7 +13,10 @@ class Session {
     return Session(
       token: json['token'] as String,
       deviceId: json['deviceId'] as String,
-      userName: json['user']?['name'] as String? ?? json['userName'] as String? ?? 'User',
+      userName:
+          json['user']?['name'] as String? ??
+          json['userName'] as String? ??
+          'User',
     );
   }
 

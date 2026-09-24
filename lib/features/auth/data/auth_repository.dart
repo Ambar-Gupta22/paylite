@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import '../../../core/errors/bank_error.dart';
+
 import '../../../core/network/api_client.dart';
 import '../../../core/network/error_mapper.dart';
 import '../domain/session.dart';
@@ -13,15 +13,8 @@ class AuthRepository {
     try {
       final response = await _apiClient.dio.post(
         '/auth/login',
-        data: {
-          'customerId': customerId,
-          'pin': pin,
-        },
-        options: Options(
-          headers: {
-            'X-Device-Id': deviceId,
-          },
-        ),
+        data: {'customerId': customerId, 'pin': pin},
+        options: Options(headers: {'X-Device-Id': deviceId}),
       );
 
       return Session(
