@@ -15,9 +15,7 @@ void main() {
   setUp(() {
     mockRepo = MockPaymentRepository();
     container = ProviderContainer(
-      overrides: [
-        paymentRepositoryProvider.overrideWithValue(mockRepo),
-      ],
+      overrides: [paymentRepositoryProvider.overrideWithValue(mockRepo)],
     );
   });
 
@@ -32,11 +30,17 @@ void main() {
     });
 
     test('initFlow transitions to reviewing and generates key', () {
-      final vpa = Vpa(address: 'ramesh@paylite', verifiedName: 'Ramesh Singh', bankName: 'PayLite Bank');
-      container.read(paymentFlowProvider.notifier).initFlow('ramesh@paylite', 50000, '', vpa);
-      
+      final vpa = Vpa(
+        address: 'ramesh@paylite',
+        verifiedName: 'Ramesh Singh',
+        bankName: 'PayLite Bank',
+      );
+      container
+          .read(paymentFlowProvider.notifier)
+          .initFlow('ramesh@paylite', 50000, '', vpa);
+
       final state = container.read(paymentFlowProvider);
-      
+
       expect(state.stage, FlowStage.reviewing);
       expect(state.payeeVpa, 'ramesh@paylite');
       expect(state.amountPaise, 50000);
@@ -45,13 +49,15 @@ void main() {
     });
 
     test('double-tap is blocked during processing', () async {
-      when(() => mockRepo.pay(
-        payeeVpa: any(named: 'payeeVpa'),
-        amountPaise: any(named: 'amountPaise'),
-        pinHash: any(named: 'pinHash'),
-        idempotencyKey: any(named: 'idempotencyKey'),
-        note: any(named: 'note'),
-      )).thenAnswer((_) async {
+      when(
+        () => mockRepo.pay(
+          payeeVpa: any(named: 'payeeVpa'),
+          amountPaise: any(named: 'amountPaise'),
+          pinHash: any(named: 'pinHash'),
+          idempotencyKey: any(named: 'idempotencyKey'),
+          note: any(named: 'note'),
+        ),
+      ).thenAnswer((_) async {
         await Future.delayed(const Duration(milliseconds: 100));
         return Payment(
           id: '1',
@@ -63,30 +69,36 @@ void main() {
       });
 
       final notifier = container.read(paymentFlowProvider.notifier);
-      final vpa = Vpa(address: 'ramesh@paylite', verifiedName: 'Ramesh Singh', bankName: 'PayLite Bank');
+      final vpa = Vpa(
+        address: 'ramesh@paylite',
+        verifiedName: 'Ramesh Singh',
+        bankName: 'PayLite Bank',
+      );
       notifier.initFlow('ramesh@paylite', 50000, '', vpa);
       notifier.goToPin();
-      
+
       // Fire first request (doesn't await)
       final future1 = notifier.pay('hash');
-      
+
       // State should now be processing
       expect(container.read(paymentFlowProvider).stage, FlowStage.processing);
-      
+
       // Fire second request
       final future2 = notifier.pay('hash2');
-      
+
       await future1;
       await future2;
 
       // Verify repo was called ONLY ONCE
-      verify(() => mockRepo.pay(
-        payeeVpa: any(named: 'payeeVpa'),
-        amountPaise: any(named: 'amountPaise'),
-        pinHash: any(named: 'pinHash'),
-        idempotencyKey: any(named: 'idempotencyKey'),
-        note: any(named: 'note'),
-      )).called(1);
+      verify(
+        () => mockRepo.pay(
+          payeeVpa: any(named: 'payeeVpa'),
+          amountPaise: any(named: 'amountPaise'),
+          pinHash: any(named: 'pinHash'),
+          idempotencyKey: any(named: 'idempotencyKey'),
+          note: any(named: 'note'),
+        ),
+      ).called(1);
     });
   });
 }

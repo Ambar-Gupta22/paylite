@@ -20,15 +20,18 @@ class CollectRequest {
   factory CollectRequest.fromJson(Map<String, dynamic> json) {
     return CollectRequest(
       id: json['id'] as String,
-      requesterVpa: json['requesterVpa'] as String? ?? json['from'] as String? ?? 'unknown',
+      requesterVpa:
+          json['requesterVpa'] as String? ??
+          json['from'] as String? ??
+          'unknown',
       amountPaise: json['amountPaise'] as int,
       note: json['note'] as String?,
       status: CollectStatus.values.firstWhere(
         (e) => e.name.toLowerCase() == (json['status'] as String).toLowerCase(),
         orElse: () => CollectStatus.pending,
       ),
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt'] as String) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
     );
   }

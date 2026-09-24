@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/utils/money.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/widgets/async_value_view.dart';
@@ -34,7 +35,8 @@ class StatusScreen extends ConsumerWidget {
             leading: IconButton(
               icon: const Icon(Icons.close),
               tooltip: 'Close',
-              onPressed: () => _handleClose(context, ref, statusState.valueOrNull),
+              onPressed: () =>
+                  _handleClose(context, ref, statusState.valueOrNull),
             ),
           ),
           body: SafeArea(
@@ -51,7 +53,11 @@ class StatusScreen extends ConsumerWidget {
   }
 
   /// Show a warning dialog if payment is still processing before navigating away.
-  Future<void> _handleClose(BuildContext context, WidgetRef ref, Payment? payment) async {
+  Future<void> _handleClose(
+    BuildContext context,
+    WidgetRef ref,
+    Payment? payment,
+  ) async {
     if (payment != null && payment.status == PaymentStatus.pending) {
       final shouldLeave = await showDialog<bool>(
         context: context,
@@ -89,7 +95,11 @@ class StatusScreen extends ConsumerWidget {
     context.go('/home');
   }
 
-  Widget _buildStatusContent(BuildContext context, WidgetRef ref, Payment payment) {
+  Widget _buildStatusContent(
+    BuildContext context,
+    WidgetRef ref,
+    Payment payment,
+  ) {
     IconData icon;
     Color color;
     String statusText;
@@ -121,7 +131,9 @@ class StatusScreen extends ConsumerWidget {
         children: [
           const Spacer(),
           AnimatedSwitcher(
-            duration: disableAnimations ? Duration.zero : const Duration(milliseconds: 500),
+            duration: disableAnimations
+                ? Duration.zero
+                : const Duration(milliseconds: 500),
             transitionBuilder: (child, animation) {
               return ScaleTransition(
                 scale: animation,
@@ -139,10 +151,8 @@ class StatusScreen extends ConsumerWidget {
           Text(
             statusText,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.bold,
-            ),
+            style: Theme.of(context).textTheme.headlineSmall
+                ?.copyWith(color: color, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 32),
           Text(
@@ -161,9 +171,15 @@ class StatusScreen extends ConsumerWidget {
               children: [
                 _buildDetailRow('To', payment.counterparty ?? 'Unknown'),
                 const Divider(),
-                _buildDetailRow('Date', AppDateFormat.format(payment.createdAt)),
+                _buildDetailRow(
+                  'Date',
+                  AppDateFormat.format(payment.createdAt),
+                ),
                 const Divider(),
-                _buildDetailRow('Ref ID', payment.id.split('-').first.toUpperCase()),
+                _buildDetailRow(
+                  'Ref ID',
+                  payment.id.split('-').first.toUpperCase(),
+                ),
               ],
             ),
           ),

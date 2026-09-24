@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'router.dart';
 import 'theme.dart';
 
@@ -39,7 +40,7 @@ class _PayLiteAppState extends ConsumerState<PayLiteApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(routerProvider);
-    
+
     return MaterialApp.router(
       title: 'PayLite',
       theme: AppTheme.lightTheme,

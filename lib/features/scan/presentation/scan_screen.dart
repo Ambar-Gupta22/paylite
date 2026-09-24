@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../data/qr_parser.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -24,16 +25,16 @@ class _ScanScreenState extends State<ScanScreen> {
 
   void _onDetect(BarcodeCapture capture) {
     if (_isProcessing) return;
-    
+
     final List<Barcode> barcodes = capture.barcodes;
     if (barcodes.isEmpty || barcodes.first.rawValue == null) return;
-    
+
     final rawValue = barcodes.first.rawValue!;
-    
+
     setState(() => _isProcessing = true);
-    
+
     final payload = QrParser.parse(rawValue);
-    
+
     if (payload == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -47,17 +48,18 @@ class _ScanScreenState extends State<ScanScreen> {
       });
       return;
     }
-    
+
     // Valid QR, navigate to pay screen with query params
     final uri = Uri(
       path: '/pay',
       queryParameters: {
         'vpa': payload.vpa,
         if (payload.name != null) 'name': payload.name,
-        if (payload.amountPaise != null) 'amount': payload.amountPaise.toString(),
+        if (payload.amountPaise != null)
+          'amount': payload.amountPaise.toString(),
       },
     );
-    
+
     context.pushReplacement(uri.toString());
   }
 
@@ -81,7 +83,11 @@ class _ScanScreenState extends State<ScanScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline, color: Colors.red, size: 64),
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 64,
+                      ),
                       const SizedBox(height: 16),
                       Text(
                         'Camera is needed to scan payment QR codes',
@@ -102,7 +108,7 @@ class _ScanScreenState extends State<ScanScreen> {
               );
             },
           ),
-          
+
           // Scanner Overlay
           Center(
             child: Container(
@@ -112,12 +118,14 @@ class _ScanScreenState extends State<ScanScreen> {
                 border: Border.all(color: Colors.white, width: 2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: _isProcessing 
-                  ? const Center(child: CircularProgressIndicator(color: Colors.white))
+              child: _isProcessing
+                  ? const Center(
+                      child: CircularProgressIndicator(color: Colors.white),
+                    )
                   : null,
             ),
           ),
-          
+
           Positioned(
             bottom: 48,
             left: 0,

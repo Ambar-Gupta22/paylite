@@ -9,7 +9,10 @@ void main() {
       });
 
       test('returns error for VPA without @', () {
-        expect(Validators.validateVpa('priyasharma'), 'Invalid UPI ID format (e.g., name@bank)');
+        expect(
+          Validators.validateVpa('priyasharma'),
+          'Invalid UPI ID format (e.g., name@bank)',
+        );
       });
 
       test('returns null for valid VPA', () {
@@ -23,16 +26,25 @@ void main() {
       });
 
       test('returns error for negative amount', () {
-        expect(Validators.validateAmount('-100'), 'Amount must be greater than 0');
+        expect(
+          Validators.validateAmount('-100'),
+          'Amount must be greater than 0',
+        );
       });
 
       test('returns error for amount > 10000000 paise (1 lakh)', () {
-        expect(Validators.validateAmount('100001'), 'Maximum payment limit is ₹1,00,000');
+        expect(
+          Validators.validateAmount('100001'),
+          'Maximum payment limit is ₹1,00,000',
+        );
       });
 
       test('returns null for valid amount', () {
         expect(Validators.validateAmount('500'), isNull);
-        expect(Validators.validateAmount('100000'), isNull); // Max limit is allowed
+        expect(
+          Validators.validateAmount('100000'),
+          isNull,
+        ); // Max limit is allowed
       });
     });
 
@@ -61,7 +73,10 @@ void main() {
       });
 
       test('returns error for non-alphanumeric ID', () {
-        expect(Validators.validateCustomerId('cust-001!'), 'Customer ID must be alphanumeric');
+        expect(
+          Validators.validateCustomerId('cust-001!'),
+          'Customer ID must be alphanumeric',
+        );
       });
 
       test('returns null for valid ID', () {

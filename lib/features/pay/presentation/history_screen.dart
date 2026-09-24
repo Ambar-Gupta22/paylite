@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/utils/money.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/widgets/async_value_view.dart';
@@ -33,7 +34,10 @@ class HistoryScreen extends ConsumerWidget {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(110),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 8.0,
+            ),
             child: Column(
               children: [
                 TextField(
@@ -49,7 +53,9 @@ class HistoryScreen extends ConsumerWidget {
                     ),
                   ),
                   onChanged: (value) {
-                    ref.read(historyFilterProvider.notifier).state = HistoryFilter(
+                    ref
+                        .read(historyFilterProvider.notifier)
+                        .state = HistoryFilter(
                       query: value.isEmpty ? null : value,
                       type: filter.type,
                     );
@@ -62,10 +68,8 @@ class HistoryScreen extends ConsumerWidget {
                       label: const Text('All'),
                       selected: filter.type == null,
                       onSelected: (_) {
-                        ref.read(historyFilterProvider.notifier).state = HistoryFilter(
-                          query: filter.query,
-                          type: null,
-                        );
+                        ref.read(historyFilterProvider.notifier).state =
+                            HistoryFilter(query: filter.query, type: null);
                       },
                     ),
                     const SizedBox(width: 8),
@@ -73,10 +77,8 @@ class HistoryScreen extends ConsumerWidget {
                       label: const Text('Sent'),
                       selected: filter.type == 'sent',
                       onSelected: (_) {
-                        ref.read(historyFilterProvider.notifier).state = HistoryFilter(
-                          query: filter.query,
-                          type: 'sent',
-                        );
+                        ref.read(historyFilterProvider.notifier).state =
+                            HistoryFilter(query: filter.query, type: 'sent');
                       },
                     ),
                     const SizedBox(width: 8),
@@ -84,7 +86,9 @@ class HistoryScreen extends ConsumerWidget {
                       label: const Text('Received'),
                       selected: filter.type == 'received',
                       onSelected: (_) {
-                        ref.read(historyFilterProvider.notifier).state = HistoryFilter(
+                        ref
+                            .read(historyFilterProvider.notifier)
+                            .state = HistoryFilter(
                           query: filter.query,
                           type: 'received',
                         );
@@ -105,7 +109,7 @@ class HistoryScreen extends ConsumerWidget {
           if (payments.isEmpty) {
             return const Center(child: Text('No transactions found.'));
           }
-          
+
           return ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.all(16),

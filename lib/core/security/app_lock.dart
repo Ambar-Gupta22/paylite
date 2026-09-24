@@ -30,9 +30,10 @@ class AppLockObserver extends WidgetsBindingObserver {
 
       if (_isLocked) {
         onRequireAuth();
-        _isLocked = false; // Reset lock after prompting (auth screen handles the rest)
+        _isLocked =
+            false; // Reset lock after prompting (auth screen handles the rest)
       }
-      
+
       _pausedAt = null;
     }
   }

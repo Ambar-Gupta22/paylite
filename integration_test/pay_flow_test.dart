@@ -11,7 +11,7 @@ void main() {
 
     // Just verify the app boots to login screen
     expect(find.text('Login to PayLite'), findsOneWidget);
-    
+
     // In a real integration test against a staging backend, we would:
     // 1. Enter credentials and login
     // 2. Tap Pay

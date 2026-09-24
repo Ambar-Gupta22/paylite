@@ -4,7 +4,8 @@ sealed class BankError implements Exception {
 
   const factory BankError.unauthorized({String? traceId}) = UnauthorizedError;
   const factory BankError.notFound({String? traceId}) = NotFoundError;
-  const factory BankError.validationError(String details, {String? traceId}) = ValidationError;
+  const factory BankError.validationError(String details, {String? traceId}) =
+      ValidationError;
   const factory BankError.conflict({String? traceId}) = ConflictError;
   const factory BankError.serverError({String? traceId}) = ServerError;
   const factory BankError.networkError() = NetworkError;

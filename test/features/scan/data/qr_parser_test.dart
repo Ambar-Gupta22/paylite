@@ -4,8 +4,10 @@ import 'package:paylite/features/scan/data/qr_parser.dart';
 void main() {
   group('QrParser', () {
     test('parses valid UPI QR with amount', () {
-      final payload = QrParser.parse('upi://pay?pa=priya@paylite&pn=Priya%20Sharma&am=100.50');
-      
+      final payload = QrParser.parse(
+        'upi://pay?pa=priya@paylite&pn=Priya%20Sharma&am=100.50',
+      );
+
       expect(payload, isNotNull);
       expect(payload!.vpa, 'priya@paylite');
       expect(payload.name, 'Priya Sharma');
@@ -14,7 +16,7 @@ void main() {
 
     test('parses valid UPI QR without amount', () {
       final payload = QrParser.parse('upi://pay?pa=ramesh@paylite&pn=Ramesh');
-      
+
       expect(payload, isNotNull);
       expect(payload!.vpa, 'ramesh@paylite');
       expect(payload.name, 'Ramesh');
@@ -23,7 +25,7 @@ void main() {
 
     test('trims whitespace and lowercases VPA', () {
       final payload = QrParser.parse('upi://pay?pa= PRIYA@PAYLITE  &pn=Priya');
-      
+
       expect(payload, isNotNull);
       expect(payload!.vpa, 'priya@paylite');
     });
@@ -40,7 +42,7 @@ void main() {
 
     test('handles invalid amount gracefully', () {
       final payload = QrParser.parse('upi://pay?pa=priya@paylite&am=invalid');
-      
+
       expect(payload, isNotNull);
       expect(payload!.vpa, 'priya@paylite');
       expect(payload.amountPaise, isNull); // Ignores invalid amount

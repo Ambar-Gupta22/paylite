@@ -1,8 +1,10 @@
 import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/widgets/pin_pad.dart';
 import '../../../core/widgets/secure_screen.dart';
 import '../state/payment_flow_notifier.dart';
@@ -41,7 +43,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
       final bytes = utf8.encode(_pin);
       final digest = sha256.convert(bytes);
       final pinHash = digest.toString();
-      
+
       ref.read(paymentFlowProvider.notifier).pay(pinHash);
     }
   }
@@ -82,60 +84,60 @@ class _PinScreenState extends ConsumerState<PinScreen> {
       child: SecureScreen(
         child: Scaffold(
           appBar: AppBar(
-          title: const Text('Enter UPI PIN'),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              if (!isProcessing) {
-                ref.read(paymentFlowProvider.notifier).cancelToReview();
-                context.pop();
-              }
-            },
+            title: const Text('Enter UPI PIN'),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                if (!isProcessing) {
+                  ref.read(paymentFlowProvider.notifier).cancelToReview();
+                  context.pop();
+                }
+              },
+            ),
           ),
-        ),
-        body: SafeArea(
-          child: Column(
-            children: [
-              const Spacer(),
-              Text(
-                'Enter 4 digit UPI PIN',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
-                  return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 8),
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: index < _pin.length 
-                          ? Theme.of(context).colorScheme.primary
-                          : Colors.grey[300],
-                    ),
-                  );
-                }),
-              ),
-              const Spacer(),
-              if (isProcessing)
-                const Padding(
-                  padding: EdgeInsets.all(24.0),
-                  child: CircularProgressIndicator(),
-                )
-              else
-                PinPad(
-                  currentLength: _pin.length,
-                  onNumberTapped: _onNumberTapped,
-                  onDeleteTapped: _onDeleteTapped,
-                  onSubmitTapped: _onSubmit,
+          body: SafeArea(
+            child: Column(
+              children: [
+                const Spacer(),
+                Text(
+                  'Enter 4 digit UPI PIN',
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-            ],
+                const SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(4, (index) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      width: 16,
+                      height: 16,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: index < _pin.length
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.grey[300],
+                      ),
+                    );
+                  }),
+                ),
+                const Spacer(),
+                if (isProcessing)
+                  const Padding(
+                    padding: EdgeInsets.all(24.0),
+                    child: CircularProgressIndicator(),
+                  )
+                else
+                  PinPad(
+                    currentLength: _pin.length,
+                    onNumberTapped: _onNumberTapped,
+                    onDeleteTapped: _onDeleteTapped,
+                    onSubmitTapped: _onSubmit,
+                  ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'routes.dart';
 
 import '../features/auth/state/session_provider.dart';
@@ -22,10 +23,10 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: Routes.login,
     redirect: (context, state) {
       final isGoingToLogin = state.matchedLocation == Routes.login;
-      
+
       if (!isLoggedIn && !isGoingToLogin) return Routes.login;
       if (isLoggedIn && isGoingToLogin) return Routes.home;
-      
+
       return null;
     },
     routes: [
@@ -55,15 +56,11 @@ final routerProvider = Provider<GoRouter>((ref) {
             path: 'review',
             builder: (context, state) => const ReviewScreen(),
           ),
-          GoRoute(
-            path: 'pin',
-            builder: (context, state) => const PinScreen(),
-          ),
+          GoRoute(path: 'pin', builder: (context, state) => const PinScreen()),
           GoRoute(
             path: 'status/:id',
-            builder: (context, state) => StatusScreen(
-              paymentId: state.pathParameters['id']!,
-            ),
+            builder: (context, state) =>
+                StatusScreen(paymentId: state.pathParameters['id']!),
           ),
         ],
       ),

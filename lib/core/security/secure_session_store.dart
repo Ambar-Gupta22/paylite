@@ -1,10 +1,12 @@
 import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import '../../features/auth/domain/session.dart';
 
 class SecureSessionStore {
   final FlutterSecureStorage _storage;
-  
+
   static const String _sessionKey = 'paylite_session';
 
   SecureSessionStore(this._storage);
@@ -17,7 +19,7 @@ class SecureSessionStore {
   Future<Session?> getSession() async {
     final jsonString = await _storage.read(key: _sessionKey);
     if (jsonString == null) return null;
-    
+
     try {
       final map = jsonDecode(jsonString) as Map<String, dynamic>;
       return Session.fromJson(map);

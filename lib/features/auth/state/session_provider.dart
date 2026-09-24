@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+
 import '../../../core/providers.dart';
 import '../domain/session.dart';
 
@@ -12,12 +13,12 @@ class SessionNotifier extends AsyncNotifier<Session?> {
   @override
   Future<Session?> build() async {
     final store = ref.read(secureSessionStoreProvider);
-    
+
     // Simply try to restore the session from secure storage.
     // We use ref.read (not ref.watch) so that this provider does NOT
     // get rebuilt whenever unrelated providers touch the dependency graph.
     final session = await store.getSession();
-    
+
     if (session != null && !kIsWeb) {
       // On native platforms, optionally prompt biometrics.
       // On web (Chrome testing), skip biometrics entirely.
@@ -33,7 +34,7 @@ class SessionNotifier extends AsyncNotifier<Session?> {
         }
       }
     }
-    
+
     return session;
   }
 
@@ -42,16 +43,17 @@ class SessionNotifier extends AsyncNotifier<Session?> {
     state = await AsyncValue.guard(() async {
       final repo = ref.read(authRepositoryProvider);
       final store = ref.read(secureSessionStoreProvider);
-      
+
       // Get a simple device ID
       String deviceId = 'web-browser';
       if (!kIsWeb) {
         try {
           final deviceInfo = DeviceInfoPlugin();
           final info = await deviceInfo.deviceInfo;
-          deviceId = info.data['id']?.toString() ?? 
-                     info.data['identifierForVendor']?.toString() ??
-                     'device-${DateTime.now().millisecondsSinceEpoch}';
+          deviceId =
+              info.data['id']?.toString() ??
+              info.data['identifierForVendor']?.toString() ??
+              'device-${DateTime.now().millisecondsSinceEpoch}';
         } catch (_) {
           deviceId = 'device-${DateTime.now().millisecondsSinceEpoch}';
         }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../core/utils/money.dart';
 import '../../../core/widgets/async_value_view.dart';
 import '../../../core/widgets/skeleton.dart';
@@ -104,7 +105,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           loading: () => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Available Balance', style: TextStyle(color: Colors.white70)),
+              const Text(
+                'Available Balance',
+                style: TextStyle(color: Colors.white70),
+              ),
               const SizedBox(height: 8),
               const Skeleton(width: 150, height: 40),
               const SizedBox(height: 16),
@@ -127,13 +131,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       color: Colors.white,
                     ),
                     tooltip: _balanceVisible ? 'Hide balance' : 'Show balance',
-                    onPressed: () => setState(() => _balanceVisible = !_balanceVisible),
+                    onPressed: () =>
+                        setState(() => _balanceVisible = !_balanceVisible),
                   ),
                 ],
               ),
               const SizedBox(height: 4),
               Text(
-                _balanceVisible ? MoneyFormatter.formatPaise(account.balancePaise) : '₹ ••••••',
+                _balanceVisible
+                    ? MoneyFormatter.formatPaise(account.balancePaise)
+                    : '₹ ••••••',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 36,
@@ -188,7 +195,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildActionItem(BuildContext context, {required IconData icon, required String label, required VoidCallback onTap}) {
+  Widget _buildActionItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: () {
         // Yield event loop to prevent mouse_tracker assertion on Web route transitions
@@ -202,10 +214,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             CircleAvatar(
               radius: 28,
               backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-              child: Icon(icon, color: Theme.of(context).colorScheme.primary, size: 28),
+              child: Icon(
+                icon,
+                color: Theme.of(context).colorScheme.primary,
+                size: 28,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            ),
           ],
         ),
       ),

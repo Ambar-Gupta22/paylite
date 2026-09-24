@@ -6,6 +6,7 @@ import 'package:paylite/core/network/api_client.dart';
 import 'package:paylite/features/pay/domain/payment.dart';
 
 class MockApiClient extends Mock implements ApiClient {}
+
 class MockDio extends Mock implements Dio {}
 
 void main() {
@@ -18,7 +19,7 @@ void main() {
     mockDio = MockDio();
     when(() => mockApiClient.dio).thenReturn(mockDio);
     repository = PaymentRepository(mockApiClient);
-    
+
     registerFallbackValue(Options());
   });
 
@@ -38,16 +39,18 @@ void main() {
         },
       );
 
-      when(() => mockDio.post(
-        any(),
-        data: any(named: 'data'),
-        options: any(named: 'options'),
-      )).thenAnswer((invocation) async {
+      when(
+        () => mockDio.post(
+          any(),
+          data: any(named: 'data'),
+          options: any(named: 'options'),
+        ),
+      ).thenAnswer((invocation) async {
         final options = invocation.namedArguments[#options] as Options;
-        
+
         // Verify the idempotency key is exactly what we passed
         expect(options.headers?['Idempotency-Key'], idempotencyKey);
-        
+
         return mockResponse;
       });
 
@@ -61,16 +64,18 @@ void main() {
 
       // Assert
       expect(result1.id, 'payment-1');
-      verify(() => mockDio.post(
-        '/payments',
-        data: {
-          'payeeVpa': 'ramesh@paylite',
-          'amountPaise': 50000,
-          'note': null,
-          'pinHash': 'hash',
-        },
-        options: any(named: 'options'),
-      )).called(1);
+      verify(
+        () => mockDio.post(
+          '/payments',
+          data: {
+            'payeeVpa': 'ramesh@paylite',
+            'amountPaise': 50000,
+            'note': null,
+            'pinHash': 'hash',
+          },
+          options: any(named: 'options'),
+        ),
+      ).called(1);
     });
   });
 }

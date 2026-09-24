@@ -1,11 +1,14 @@
 import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../core/providers.dart';
 import '../domain/payment.dart';
 
-final paymentStatusProvider = AsyncNotifierProviderFamily<PaymentStatusNotifier, Payment, String>(
-  () => PaymentStatusNotifier(),
-);
+final paymentStatusProvider =
+    AsyncNotifierProviderFamily<PaymentStatusNotifier, Payment, String>(
+      () => PaymentStatusNotifier(),
+    );
 
 class PaymentStatusNotifier extends FamilyAsyncNotifier<Payment, String> {
   Timer? _pollingTimer;
@@ -36,7 +39,7 @@ class PaymentStatusNotifier extends FamilyAsyncNotifier<Payment, String> {
       try {
         final repo = ref.read(paymentRepositoryProvider);
         final payment = await repo.getPaymentStatus(paymentId);
-        
+
         state = AsyncValue.data(payment);
 
         if (payment.status != PaymentStatus.pending) {

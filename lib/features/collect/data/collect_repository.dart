@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import '../../../core/errors/bank_error.dart';
 import '../../../core/network/api_client.dart';
 import '../../../core/network/error_mapper.dart';
@@ -32,11 +33,7 @@ class CollectRepository {
     try {
       final response = await _apiClient.dio.post(
         '/collect-requests',
-        data: {
-          'payeeVpa': payeeVpa,
-          'amountPaise': amountPaise,
-          'note': note,
-        },
+        data: {'payeeVpa': payeeVpa, 'amountPaise': amountPaise, 'note': note},
       );
 
       return CollectRequest.fromJson(response.data);
@@ -53,14 +50,8 @@ class CollectRepository {
     try {
       final response = await _apiClient.dio.post(
         '/collect-requests/$id/pay',
-        data: {
-          'pinHash': pinHash,
-        },
-        options: Options(
-          headers: {
-            'Idempotency-Key': idempotencyKey,
-          },
-        ),
+        data: {'pinHash': pinHash},
+        options: Options(headers: {'Idempotency-Key': idempotencyKey}),
       );
 
       return Payment.fromJson(response.data);
