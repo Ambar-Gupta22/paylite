@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/utils/validators.dart';
+import '../../../core/widgets/secure_screen.dart';
 import '../state/vpa_lookup_provider.dart';
 import '../state/payment_flow_notifier.dart';
 
@@ -114,79 +115,81 @@ class _PayScreenState extends ConsumerState<PayScreen> {
     // Lock amount field if it was provided by a fixed QR code
     final isAmountLocked = widget.initialAmount != null && widget.initialAmount!.isNotEmpty;
 
-    return Scaffold(
-      appBar: AppBar(title: const Text('Pay Contact')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: _vpaController,
-                decoration: InputDecoration(
-                  labelText: 'UPI ID / VPA',
-                  border: const OutlineInputBorder(),
-                  suffixIcon: vpaState.isLoading 
-                    ? const Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : TextButton(
-                        onPressed: _verifyVpa,
-                        child: const Text('Verify'),
-                      ),
+    return SecureScreen(
+      child: Scaffold(
+        appBar: AppBar(title: const Text('Pay Contact')),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: _vpaController,
+                  decoration: InputDecoration(
+                    labelText: 'UPI ID / VPA',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: vpaState.isLoading 
+                      ? const Padding(
+                          padding: EdgeInsets.all(12.0),
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : TextButton(
+                          onPressed: _verifyVpa,
+                          child: const Text('Verify'),
+                        ),
+                  ),
+                  validator: Validators.validateVpa,
+                  onChanged: (_) {
+                    if (_isVpaVerified) setState(() => _isVpaVerified = false);
+                  },
+                  enabled: !vpaState.isLoading,
                 ),
-                validator: Validators.validateVpa,
-                onChanged: (_) {
-                  if (_isVpaVerified) setState(() => _isVpaVerified = false);
-                },
-                enabled: !vpaState.isLoading,
-              ),
-              if (_isVpaVerified && vpaState.valueOrNull != null) ...[
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.check_circle, color: Colors.green, size: 16),
-                    const SizedBox(width: 8),
-                    Text(
-                      vpaState.valueOrNull!.verifiedName,
-                      style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                if (_isVpaVerified && vpaState.valueOrNull != null) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                      const SizedBox(width: 8),
+                      Text(
+                        vpaState.valueOrNull!.verifiedName,
+                        style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
+                const SizedBox(height: 24),
+                TextFormField(
+                  controller: _amountController,
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                    prefixText: '₹ ',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: Validators.validateAmount,
+                  readOnly: isAmountLocked,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _noteController,
+                  decoration: const InputDecoration(
+                    labelText: 'Add a note (optional)',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLength: 50,
+                ),
+                const SizedBox(height: 32),
+                ElevatedButton(
+                  onPressed: _isVpaVerified ? _onContinue : null,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: const Text('Continue'),
                 ),
               ],
-              const SizedBox(height: 24),
-              TextFormField(
-                controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: 'Amount',
-                  prefixText: '₹ ',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: Validators.validateAmount,
-                readOnly: isAmountLocked,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _noteController,
-                decoration: const InputDecoration(
-                  labelText: 'Add a note (optional)',
-                  border: OutlineInputBorder(),
-                ),
-                maxLength: 50,
-              ),
-              const SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: _isVpaVerified ? _onContinue : null,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: const Text('Continue'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

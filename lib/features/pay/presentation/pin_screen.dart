@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/widgets/pin_pad.dart';
+import '../../../core/widgets/secure_screen.dart';
 import '../state/payment_flow_notifier.dart';
 
 class PinScreen extends ConsumerStatefulWidget {
@@ -77,8 +78,9 @@ class _PinScreenState extends ConsumerState<PinScreen> {
         ref.read(paymentFlowProvider.notifier).cancelToReview();
         return true;
       },
-      child: Scaffold(
-        appBar: AppBar(
+      child: SecureScreen(
+        child: Scaffold(
+          appBar: AppBar(
           title: const Text('Enter UPI PIN'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -132,6 +134,7 @@ class _PinScreenState extends ConsumerState<PinScreen> {
           ),
         ),
       ),
-    );
+    ),
+  );
   }
 }

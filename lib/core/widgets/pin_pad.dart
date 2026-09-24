@@ -47,7 +47,7 @@ class PinPad extends StatelessWidget {
   Widget _buildButton(BuildContext context, String number) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: TextButton(
           onPressed: () {
             if (currentLength < maxLength) {
@@ -55,12 +55,15 @@ class PinPad extends StatelessWidget {
             }
           },
           style: TextButton.styleFrom(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(16),
             shape: const CircleBorder(),
           ),
-          child: Text(
-            number,
-            style: Theme.of(context).textTheme.headlineMedium,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              number,
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
           ),
         ),
       ),
@@ -70,12 +73,13 @@ class PinPad extends StatelessWidget {
   Widget _buildActionButton(BuildContext context, IconData icon, VoidCallback onPressed) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: IconButton(
           onPressed: onPressed,
           icon: Icon(icon),
           iconSize: 32,
-          padding: const EdgeInsets.all(24),
+          tooltip: 'Delete',
+          padding: const EdgeInsets.all(16),
         ),
       ),
     );
@@ -85,12 +89,13 @@ class PinPad extends StatelessWidget {
     final isEnabled = currentLength >= minLength && currentLength <= maxLength;
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(4.0),
         child: IconButton(
           onPressed: isEnabled ? onSubmitTapped : null,
           icon: const Icon(Icons.check_circle),
           color: Theme.of(context).colorScheme.primary,
           iconSize: 48,
+          tooltip: 'Submit PIN',
           padding: const EdgeInsets.all(16),
         ),
       ),

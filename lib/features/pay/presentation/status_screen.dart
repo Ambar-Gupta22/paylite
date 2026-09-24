@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/utils/money.dart';
 import '../../../core/utils/date_format.dart';
 import '../../../core/widgets/async_value_view.dart';
+import '../../../core/widgets/secure_screen.dart';
 import '../domain/payment.dart';
 import '../state/payment_status_provider.dart';
 import '../state/payment_flow_notifier.dart';
@@ -24,8 +25,9 @@ class StatusScreen extends ConsumerWidget {
         _cleanUpAndGoHome(context, ref);
         return false;
       },
-      child: Scaffold(
-        appBar: AppBar(
+      child: SecureScreen(
+        child: Scaffold(
+          appBar: AppBar(
           title: const Text('Payment Status'),
           leading: IconButton(
             icon: const Icon(Icons.close),
@@ -41,8 +43,9 @@ class StatusScreen extends ConsumerWidget {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   void _cleanUpAndGoHome(BuildContext context, WidgetRef? ref) {
     if (ref != null) {
@@ -76,13 +79,29 @@ class StatusScreen extends ConsumerWidget {
         break;
     }
 
+    final disableAnimations = MediaQuery.disableAnimationsOf(context);
+
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(),
-          Icon(icon, size: 100, color: color),
+          AnimatedSwitcher(
+            duration: disableAnimations ? Duration.zero : const Duration(milliseconds: 500),
+            transitionBuilder: (child, animation) {
+              return ScaleTransition(
+                scale: animation,
+                child: FadeTransition(opacity: animation, child: child),
+              );
+            },
+            child: Icon(
+              icon,
+              key: ValueKey<PaymentStatus>(payment.status),
+              size: 100,
+              color: color,
+            ),
+          ),
           const SizedBox(height: 24),
           Text(
             statusText,
